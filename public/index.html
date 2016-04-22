@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+<meta charset="UTF-8">	
+<title>Contact List App</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+<style>
+.produit{
+	margin-top:5%;
+	width:80%;
+	margin:0 auto;
+}
+.produit article{
+	float:left;
+	width:25%;
+	margin-right: 5%;
+	margin-bottom: 5%;
+}
+.produit article img{
+	width:200px;
+	height:300px;
+}
+section
+{
+  background:yellow;
+}
+.banner
+{
+  background:#B8B8B8;
+  min-height:200px;
+}
+.banner .row
+{
+  text-align:center;
+  margin-top:50px;
+}
+.banner h1
+{
+  color:white;
+}
+
+
+
+/***********************************************************************
+*  OPAQUE NAVBAR SECTION
+***********************************************************************/
+.opaque-navbar {
+    background-color: rgba(0,0,0,0.5);
+  /* Transparent = rgba(0,0,0,0) / Translucent = (0,0,0,0.5)  */
+    height: 60px;
+    border-bottom: 0px;
+    transition: background-color .5s ease 0s;
+}
+
+.opaque-navbar.opaque {
+    background-color: black;
+    height: 60px;
+    transition: background-color .5s ease 0s;
+}
+
+ul.dropdown-menu {
+    background-color: black;
+}
+
+
+@media (max-width: 992px) {
+  body
+  {
+    background:red;
+  }
+  .opaque-navbar {
+    background-color: black;
+    height: 60px;
+    transition: background-color .5s ease 0s;
+}
+
+}
+
+</style>
+</head>
+<body>
+<header>
+<div class="navbar navbar-inverse navbar-fixed-top opaque-navbar">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navMain">
+  <span class="glyphicon glyphicon-chevron-right" style="color:white;"></span>
+    
+  </button>
+      <a class="navbar-brand" href="#">Surf Academy</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="nav navbar-nav pull-right">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Services and Pricing</a></li> 
+        <li><a href="#">Contact Us</a></li> 
+      </ul>
+    </div>
+  </div>
+</div>
+<section class="banner">
+<div class="container">
+  <div class="row">
+  <h1>Surf Business Products</h1>
+  </div>
+  </div>
+  </section>
+</header>
+<div class="container" ng-controller="AppCtrl">	
+
+	
+<section>
+<div class="produit" ng-repeat="produit in productlist">
+<article>
+	<header><h4>{{produit.title}} <span>Reference : {{produit._id}}</span></h4></header>
+<figure>
+
+<img ng-src="{{produit.image}}" alt="{{produit.title}}" />
+<figcaption>{{produit.description}}</figcaption>
+</figure>
+
+<footer>Prix: {{produit.prix}}</footer>
+</article>
+</div>
+</section>
+
+<script type="text/javascript" src="https://code.angularjs.org/1.5.5/angular.min.js"></script>
+<script type="text/javascript" src="controllers/controller.js"></script>
+</body>
+</html>
