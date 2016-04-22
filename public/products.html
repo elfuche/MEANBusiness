@@ -1,0 +1,20 @@
+<div class="container" ng-controller="AppCtrl">	
+
+	
+<section>
+<div class="produit" ng-repeat="produit in productlist">
+<article>
+	<header><h4>{{produit.title}} <span>Reference : {{produit._id}}</span></h4></header>
+<figure>
+
+<img ng-src="{{produit.image}}" alt="{{produit.title}}" />
+<figcaption>{{produit.description}}</figcaption>
+</figure>
+
+<footer>Prix: {{produit.prix}}</footer>
+<button ng-click="Commander(produit._id)" class="btn btn-info">Commander</button>
+</article>
+</div>
+
+</section>
+</div>

@@ -1,0 +1,22 @@
+<div style="width:50%; margin-right:20%;margin-left:20%;">
+<h1>Description du produit</h1>
+<div ng-controller="detailCtrl">
+<figure>
+<img ng-src="{{produit.image}}" alt="{{produit.title}}" />
+<figcaption style="font-weight:bold;width:60%;">{{produit.description}}</figcaption>
+</figure>
+</div>
+<br>
+<span style="color:blueviolet; font-size:16px; font-weight:bold">Prix :{{produit.prix | currency}}</span> 
+<br>
+<br>
+<button ng-click="ajoutPanier()" class="btn btn-primary">Ajouter au panier</button>
+<br>
+<br>
+<article style="font-size:12px;width:60%;">
+En cas de défaut de livraison à la date ou au délai prévu ou, à défaut, au plus tard trente jours après la conclusion du contrat, le client peut vous enjoindre, par un écrit, d’effectuer la livraison ou de fournir le service dans un délai supplémentaire raisonnable. Si vous ne vous êtes pas exécuté dans ce nouveau délai, le client pourra demander, toujours par un écrit, la résolution de la vente. Celle-ci devient effective dès que vous recevez son écrit.
+Toutefois, les circonstances qui entourent la signature du contrat ou une demande expresse du client peuvent faire de la date ou du délai prévu une condition essentielle du contrat. Si le client n’est pas livré à cette date ou dans ce délai, il peut résoudre immédiatement le contrat (article L.138-2 du même code).
+
+Attention à ne pas faire de publicité mensongère en indiquant par exemple un délai impossible à tenir (livraison en 24 heures par exemple). En effet, toute publicité mensongère vous expose à une sanction. 
+</article>
+</div>
