@@ -15,6 +15,7 @@ $routeProvider
 	templateUrl:'panier.html',
 	controller:'cartCtrl'
 })
+
 .otherwise({redirectTo:'/'})
 }]);
 
@@ -57,7 +58,17 @@ $scope.ajoutPanier = function(id,title,prix){
 
 }]);
 
-myApp.controller('cartCtrl', ['$scope','$routeParams', function($scope,$routeParams){
+myApp.controller('cartCtrl', ['$scope','$routeParams','$http', function($scope,$routeParams,$http){
+//Afficher contenu panier
+
+var refresh = function(){
+$http.get('/panier').success(function(response){
+$scope.panier = response;
+//$location.path('/panier');
+});
+};
+refresh();
+
 var id = $routeParams.id;
 var title = $routeParams.title;
 var prix = $routeParams.prix;
@@ -68,4 +79,16 @@ $scope.ref=id;
 $scope.nom = title;
 $scope.prix=prix;
 $scope.date = new Date();
+var data={idArticle:$scope.ref,dCommande:$scope.date,prix:$scope.prix,nom:$scope.nom};
+//Ajouter produit dans panier
+$http.post('/ppanier', data).success(function(response){
+	console.log(response);
+});
+
+$scope.remove = function(id){
+	console.log(id);
+	$http.delete('/dpanier/' +id).success(function(response){
+		refresh();
+	});
+};
 }]);

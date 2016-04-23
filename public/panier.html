@@ -5,13 +5,15 @@
 <th>Nom</th>
 <th>Prix</th>
 <th>Date de commande</th>
+<th>&nbsp</th>
 </thead>
 <tbody>
-<tr>
-<td>{{ref}}</td>
-<td>{{nom}}</td>
-<td>{{prix}}</td>
-<td>{{date}}</td>
+<tr ng-repeat="p in panier">
+<td>{{p.idArticle}}</td>
+<td>{{p.nom}}</td>
+<td>{{p.prix}}</td>
+<td>{{p.dCommande}}</td>
+<td><button class="btn btn-danger" ng-click="remove(p._id)">Remove</button></td>
 </tr>
 </tbody>
 </table>
