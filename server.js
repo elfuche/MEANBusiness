@@ -23,6 +23,15 @@ app.get('/productlist/:id', function(req,res){
    });
 
 });
+
+app.get('/panier/:id', function(req, res){
+	var id = req.params.id;
+    console.log(id);
+	db.productlist.findOne({_id: mongojs.ObjectId(id)}, function(err, doc) {
+       res.json(doc);
+     });
+});
+
 app.listen(3000);
 
 console.log("Server Running on port 3000");

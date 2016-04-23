@@ -10,7 +10,7 @@
 <span style="color:blueviolet; font-size:16px; font-weight:bold">Prix :{{produit.prix | currency}}</span> 
 <br>
 <br>
-<button ng-click="ajoutPanier()" class="btn btn-primary">Ajouter au panier</button>
+<button ng-click="ajoutPanier(produit._id,produit.title,produit.prix)" class="btn btn-primary">Ajouter au panier</button>
 <br>
 <br>
 <article style="font-size:12px;width:60%;">
