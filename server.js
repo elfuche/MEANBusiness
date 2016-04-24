@@ -26,14 +26,6 @@ app.get('/productlist/:id', function(req,res){
 
 });
 
-app.get('/panier/:id', function(req, res){
-	var id = req.params.id;
-    console.log(id);
-	db.productlist.findOne({_id: mongojs.ObjectId(id)}, function(err, doc) {
-       res.json(doc);
-     });
-});
-
 
 //extraction contenu panier
 app.get('/panier', function(req, res){

@@ -11,7 +11,7 @@ $routeProvider
     templateUrl:'render.html',
 	controller:'detailCtrl'	
 })
-.when('/panier/:id/:title/:prix',{
+.when('/panier',{
 	templateUrl:'panier.html',
 	controller:'cartCtrl'
 })
@@ -50,10 +50,22 @@ $http.get('/productlist/' +id).success(function(response){
 $scope.ajoutPanier = function(id,title,prix){
 	//alert("ok");
 	console.log("panier reçoit le produit n° "+id+" nommé: "+title+" à: "+prix);
-	$location.path('/panier/'+id+'/'+title+'/'+prix);
-	$http.get('/panier/'+id).success(function(response){
-		console.log(response);
-	});
+	//$location.path('/panier/'+id+'/'+title+'/'+prix);
+	//$http.get('/panier/'+id).success(function(response){
+	//	console.log(response);
+	//});
+    var data={idArticle:id,dCommande:new Date(),prix:prix,nom:title}
+    $http.post('/ppanier', data).success(function(response){
+	console.log(response);
+	alert("Article ajouté avec succès!!!")
+    });
+    
+
+};
+
+
+$scope.voirPanier = function(){   
+$location.path('/panier');
 };
 
 }]);
@@ -61,29 +73,24 @@ $scope.ajoutPanier = function(id,title,prix){
 myApp.controller('cartCtrl', ['$scope','$routeParams','$http', function($scope,$routeParams,$http){
 //Afficher contenu panier
 
-var refresh = function(){
+//var refresh = function(){
 $http.get('/panier').success(function(response){
 $scope.panier = response;
 //$location.path('/panier');
 });
-};
-refresh();
 
-var id = $routeParams.id;
-var title = $routeParams.title;
-var prix = $routeParams.prix;
-console.log(id);
-console.log(title);
-console.log(prix);
-$scope.ref=id;
-$scope.nom = title;
-$scope.prix=prix;
-$scope.date = new Date();
-var data={idArticle:$scope.ref,dCommande:$scope.date,prix:$scope.prix,nom:$scope.nom};
+//refresh();
+
+//var id = $routeParams.id;
+//var title = $routeParams.title;
+//var prix = $routeParams.prix;
+//$scope.ref=id;
+//$scope.nom = title;
+//$scope.prix=prix;
+//$scope.date = new Date();
+//var data={idArticle:$scope.ref,dCommande:$scope.date,prix:$scope.prix,nom:$scope.nom};
 //Ajouter produit dans panier
-$http.post('/ppanier', data).success(function(response){
-	console.log(response);
-});
+
 
 $scope.remove = function(id){
 	console.log(id);
