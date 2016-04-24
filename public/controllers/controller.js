@@ -15,6 +15,10 @@ $routeProvider
 	templateUrl:'panier.html',
 	controller:'cartCtrl'
 })
+.when('/login',{
+	templateUrl:'login.html',
+	controller:'cartCtrl'
+})
 
 .otherwise({redirectTo:'/'})
 }]);
@@ -70,7 +74,7 @@ $location.path('/panier');
 
 }]);
 
-myApp.controller('cartCtrl', ['$scope','$routeParams','$http', function($scope,$routeParams,$http){
+myApp.controller('cartCtrl', ['$scope','$routeParams','$http','$location', function($scope,$routeParams,$http,$location){
 //Afficher contenu panier
 
 //var refresh = function(){
@@ -98,4 +102,9 @@ $scope.remove = function(id){
 		refresh();
 	});
 };
+
+$scope.Valider = function(){
+	$location.path('/login');
+};
+
 }]);
