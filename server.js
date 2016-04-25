@@ -34,6 +34,7 @@ app.get('/productlist/:id', function(req,res){
 app.get('/panier', function(req, res){
   dbp.panier.find(function(err, docs){
     console.log(docs);
+    //req.session.cart=docs;
     res.json(docs);
   });
 });
@@ -78,10 +79,17 @@ res.json(user);
 });
 
 app.get('/dashboard', function(req,res){
+  console.log('Dashboard ici!!');
 if(!req.session.user){ //if (!req.session.user)
 return res.status(401).send();
+console.log("ya rien ici mec!!")
 }
-return res.status(200).send("Welcome to SUPER-secret");
+//return res.status(200).send("Welcome to SUPER-secret");
+//console.log(typeof req.session.user);
+//console.log(req.session.user);
+//console.log('-----------------');
+//console.log(res.json(req.session.user));
+return res.json(req.session.user);
 });
 
 app.listen(3000);

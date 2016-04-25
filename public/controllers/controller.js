@@ -19,7 +19,7 @@ $routeProvider
 	templateUrl:'login.html',
 	controller:'loginCtrl'
 })
-.when('/dashboard/:user',{
+.when('/dashboard',{
 	templateUrl:'dashboard.html',
 	controller:'dashCtrl'
 })
@@ -108,24 +108,37 @@ $scope.login = function(){
 var data = {username:$scope.loginForm.username, password:$scope.loginForm.password};	
 $http.post('/login',data).success(function(response){
 	//alert("user trouvé!!!");
-    $scope.user = response;
+
+    //$scope.user = response;
+    
     //$location.path('/dashboard');
     //console.log(typeof $scope.user);
     //console.log(JSON.stringify(response));
-    var rs= JSON.stringify(response);
+    
+    //var rs= JSON.stringify(response);
+    
     //alert(typeof rs);
     //alert((JSON.parse(rs))["username"]);
-    var user = (JSON.parse(rs))["username"];
-    $location.path('/dashboard/'+user);
+    
+    //var user = (JSON.parse(rs))["username"];
+    $location.path('/dashboard');
 });
 
 };
 }]);
 
 myApp.controller('dashCtrl',['$scope','$routeParams','$http', function($scope,$routeParams,$http){
+$http.get('/dashboard').success(function(response){
+	alert('dashboard controller');
+	$scope.ok=response;
+});
+
 var user =$routeParams.user;
 $scope.user=user;
 $http.get('/panier').success(function(response){
 $scope.panier = response;
 });
+
+
+
 }]);
