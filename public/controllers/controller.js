@@ -17,7 +17,11 @@ $routeProvider
 })
 .when('/login',{
 	templateUrl:'login.html',
-	controller:'cartCtrl'
+	controller:'loginCtrl'
+})
+.when('/dashboard/:user',{
+	templateUrl:'dashboard.html',
+	controller:'dashCtrl'
 })
 
 .otherwise({redirectTo:'/'})
@@ -83,19 +87,6 @@ $scope.panier = response;
 //$location.path('/panier');
 });
 
-//refresh();
-
-//var id = $routeParams.id;
-//var title = $routeParams.title;
-//var prix = $routeParams.prix;
-//$scope.ref=id;
-//$scope.nom = title;
-//$scope.prix=prix;
-//$scope.date = new Date();
-//var data={idArticle:$scope.ref,dCommande:$scope.date,prix:$scope.prix,nom:$scope.nom};
-//Ajouter produit dans panier
-
-
 $scope.remove = function(id){
 	console.log(id);
 	$http.delete('/dpanier/' +id).success(function(response){
@@ -104,7 +95,37 @@ $scope.remove = function(id){
 };
 
 $scope.Valider = function(){
+
 	$location.path('/login');
 };
 
+}]);
+
+
+myApp.controller('loginCtrl',['$scope','$http','$location', function($scope,$http,$location){
+
+$scope.login = function(){
+var data = {username:$scope.loginForm.username, password:$scope.loginForm.password};	
+$http.post('/login',data).success(function(response){
+	//alert("user trouvé!!!");
+    $scope.user = response;
+    //$location.path('/dashboard');
+    //console.log(typeof $scope.user);
+    //console.log(JSON.stringify(response));
+    var rs= JSON.stringify(response);
+    //alert(typeof rs);
+    //alert((JSON.parse(rs))["username"]);
+    var user = (JSON.parse(rs))["username"];
+    $location.path('/dashboard/'+user);
+});
+
+};
+}]);
+
+myApp.controller('dashCtrl',['$scope','$routeParams','$http', function($scope,$routeParams,$http){
+var user =$routeParams.user;
+$scope.user=user;
+$http.get('/panier').success(function(response){
+$scope.panier = response;
+});
 }]);

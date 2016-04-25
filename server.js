@@ -4,10 +4,13 @@ var mongojs = require('mongojs');
 var db = mongojs('productlist',['productlist']);
 //collections panier
 var dbp = mongojs('productlist',['panier']);
+var dbu = mongojs('productlist',['users']);
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 app.use(express.static(__dirname+"/public"));
 app.use(bodyParser.json());
+app.use(session({secret:"azerty456321qsdfgh789", resave:false,saveUninitialized:true}));
 
 app.get('/productlist', function(req, res){
 	console.log('I received a GET request');
@@ -49,6 +52,36 @@ app.delete('/dpanier/:id', function(req, res){
   dbp.panier.remove({_id: mongojs.ObjectId(id)}, function(err, doc){
     res.json(doc);
   });
+});
+
+//Partie login
+app.post('/login', function(req, res){
+var username=req.body.username;
+var password = req.body.password;
+console.log(username+"  "+password);
+dbu.users.findOne({username:username, password:password}, function(err, user){
+if(err){
+console.log(err);
+return res.status(500).send();
+}
+if(!user){
+return res.status(404).send();
+}
+
+console.log("trouvé");
+//register user in session
+req.session.user=user;
+//return res.status(200).send();
+res.json(user);
+})
+
+});
+
+app.get('/dashboard', function(req,res){
+if(!req.session.user){ //if (!req.session.user)
+return res.status(401).send();
+}
+return res.status(200).send("Welcome to SUPER-secret");
 });
 
 app.listen(3000);

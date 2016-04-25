@@ -1,4 +1,8 @@
 <div class="alert alert-info" role="alert">Vous devez vous connecter afin de continuer</div>
+<ul ng-repeat="x in prd">
+<li>{{x.idArticle}}</li>
+</ul>
+
 <div class="col-md-4">
   <h1>Login</h1>
   <div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
