@@ -1,23 +1,35 @@
 var express = require('express');
-var app = express();
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var mongojs = require('mongojs');
 var db = mongojs('productlist',['productlist']);
+var dbcart=mongojs('productlist',['cartSession']);
 //collections panier
 var dbp = mongojs('productlist',['panier']);
 var dbu = mongojs('productlist',['users']);
 var bodyParser = require('body-parser');
-var session = require('express-session');
+var app = express();
+
 
 app.use(express.static(__dirname+"/public"));
+
 app.use(bodyParser.json());
-app.use(session({secret:"azerty456321qsdfgh789", resave:false,saveUninitialized:true}));
+
+app.use(session({
+     secret: 'secret',
+     store: new MongoStore({db:dbcart}),
+     resave: false,
+     saveUninitialized: true
+}));
+
 
 app.get('/productlist', function(req, res){
-	console.log('I received a GET request');
-	db.productlist.find(function(err, docs){
-		console.log(docs);
-		res.json(docs);
-	});
+  console.log('I received a GET request');
+  db.productlist.find(function(err, docs){
+    console.log(docs);
+    res.json(docs);
+  });
 });
 
 app.get('/productlist/:id', function(req,res){
@@ -29,30 +41,96 @@ app.get('/productlist/:id', function(req,res){
 
 });
 
+app.post('/cart', function (req, res) {
+        //Load (or initialize) the cart
+        req.session.cart = req.session.cart || {};
+        var cart = req.session.cart;
+        //Read the incoming product data
+        var id = req.body.idArticle;
+        console.log(id);
+        //var id = req.body.id;
+        //console.log(id);
+        //Locate the product to be added
+        db.productlist.findOne({_id: mongojs.ObjectId(id)}, function(err,doc){
+          if (err) {
+                console.log('Error adding product to cart: ', err);
+                return;
+            }
+          //Add or increase the product quantity in the shopping cart.
+            if (cart[id]) {
+                cart[id].qty++;
+            }
+            else {
+                cart[id] = {
+                    ref: id,
+                    name: doc.title,
+                    price: doc.prix,
+                    //prettyPrice: prod.prettyPrice(),
+                    qty: 1
+                };
+            }
+          res.json(doc);
+        });        
+    });
 
-//extraction contenu panier
-app.get('/panier', function(req, res){
-  dbp.panier.find(function(err, docs){
-    console.log(docs);
-    //req.session.cart=docs;
-    res.json(docs);
-  });
+app.get('/pcart', function (req, res) {
+  
+        console.log("Donne moi ton panier");
+        //Retrieve the shopping cart from memory
+        var cart = req.session.cart,
+            displayCart = {items: [], total: 0},
+            total = 0;
+        if (!cart) {
+            //res.render('result', {result: 'Your cart is empty!'});
+            //return;
+            console.log("Ton panier est vide !!!");
+        }
+        //Ready the products for display
+        for (var item in cart) {
+            displayCart.items.push(cart[item]);
+            total += (cart[item].qty * cart[item].price);
+        }
+        req.session.total = displayCart.total = total.toFixed(2);
+        console.log(displayCart.items);
+        req.session.shop=displayCart.items;
+        var model =
+        {
+            cart: displayCart
+        };
+
+        //res.status(200).send(JSON.parse(model));
+       res.json(req.session.shop);
 });
-//ajout dans panier
-app.post('/ppanier', function(req,res){
-  console.log('On mets dans le panier');
-  console.log(req.body);
-  dbp.panier.insert(req.body, function(err, doc){
-    res.json(doc);
-  });
+app.get('/total', function(req,res){
+  res.json(req.session.total);
 });
 
-app.delete('/dpanier/:id', function(req, res){
+app.delete('/cart/:id', function(req, res){
+  console.log('supprimer cette horreur!!!');
   var id = req.params.id;
   console.log(id);
-  dbp.panier.remove({_id: mongojs.ObjectId(id)}, function(err, doc){
-    res.json(doc);
-  });
+  
+  var obj= req.session.shop;
+    //console.log(obj[2].ref);
+    //console.log(obj.length);
+    var i=0;
+    for(i=0;i<obj.length;i++){
+      if(obj[i].ref === id){
+        break;
+      }
+    }
+  //console.log(i);
+  //var arr=obj.splice(i,1);
+  //req.session.shop = arr;
+  //page=arr;
+  //console.log(page);
+  //req.session.shop = [];
+  //req.session.shop = obj.shift();
+ //res.redirect('/pcart');
+ //res.json('/pcart');
+
+req.session.shop.splice(1, 1);
+res.json(true);
 });
 
 //Partie login
@@ -68,14 +146,12 @@ return res.status(500).send();
 if(!user){
 return res.status(404).send();
 }
-
 console.log("trouvé");
 //register user in session
 req.session.user=user;
 //return res.status(200).send();
 res.json(user);
 })
-
 });
 
 app.get('/dashboard', function(req,res){
@@ -84,11 +160,6 @@ if(!req.session.user){ //if (!req.session.user)
 return res.status(401).send();
 console.log("ya rien ici mec!!")
 }
-//return res.status(200).send("Welcome to SUPER-secret");
-//console.log(typeof req.session.user);
-//console.log(req.session.user);
-//console.log('-----------------');
-//console.log(res.json(req.session.user));
 return res.json(req.session.user);
 });
 
