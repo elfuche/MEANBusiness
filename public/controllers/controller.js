@@ -114,7 +114,6 @@ $scope.Valider = function(){
 myApp.controller('loginCtrl',['$scope','$http','$location', function($scope,$http,$location){
 
 $scope.login = function(){
-	alert('login button');
 var data = {username:$scope.loginForm.username, password:$scope.loginForm.password};	
 $http.post('/login',data).success(function(response){
     $location.path('/dashboard');

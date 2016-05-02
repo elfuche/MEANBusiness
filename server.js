@@ -150,52 +150,86 @@ app.get('/totalsuppr', function(req,res){
 });
 
 
-//partie passportJS 
+//    Partie PassportJs
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    dbu.users.findOne({username:username, password:password}, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false);
-        console.log('login raté');
-      }
+//passport.use(new LocalStrategy(
+  //function(username, password, done) {
+    //dbu.users.findOne({username:username, password:password}, function(err, user) {
+      //if (err) { return done(err); }
+      //if (!user) {
+        //return done(null, false);
+        //console.log('login raté');
+      //}
       //compare password
-       bcrypt.compare(password, hash, function(err, res) {
+      //console.log('user: '+user);
+      //req.session.user = user;
+       //bcrypt.compare(password, hash, function(err, res) {
         // res == true
-        if(err) { console.log('password error'); return done(null, false);}
-        console.log("password verified");
-       });
+        //if(err) { console.log('password error'); return done(null, false);}
+        //console.log("password verified");
+       //});
       //fin comparaison
       //if (!user.validPassword(password)) {
         //return done(null, false, { message: 'Incorrect password.' });
       //}
       
-      return done(null, user);
-    });
-  }
-));
+      //return done(null, user);
+    //});
+  //}
+//));
 
+//passport.serializeUser(function(user, done) {
+  //done(null, user.id);
+//});
 
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  dbu.users.find({ _id: ObjectId(id) }, function(err,user) { 
-    done(err, user); 
-  });
-});
-app.post('/login',
-  passport.authenticate('local', {failureRedirect:'/login',failureFlash: true}),
-  function(req, res) {
-    console.log('ici login post');
-    req.session.username = req.body.username;
-    res.json(true);
-  });
+//passport.deserializeUser(function(id, done) {
+  //dbu.users.find({ _id: ObjectId(id) }, function(err,user) { 
+    //done(err, user); 
+  //});
+//});
+//app.post('/login',
+  //passport.authenticate('local', {successRedirect:'/llogin', failureRedirect:'/login',failureFlash: true}),
+  //function(req, res) {
+    //var username=req.body.username;
+    //var password = req.body.password;
+    //req.session.username = req.body.username;
+    //req.session.password = req.body.password;
+  
+  //});
 //fin passportJS
+//app.get('llogin', function(req,res){
+  
+//});
+//    fin PassportJs
 
+//Partie login
+app.post('/login', function(req, res){
+var username=req.body.username;
+var password = req.body.password;
+console.log(username+"  "+password);
+
+dbu.users.findOne({username:username, password:password}, function(err, user){
+if(err){
+console.log(err);
+return res.status(500).send();
+}
+if(!user){
+return res.status(404).send();
+}
+console.log("trouvé");
+//compare
+//bcrypt.compare(password, user.password, function(err, isMatch) {
+  //    if(err) throw err;
+    //  err(null, isMatch);
+  //});
+
+
+//register user in session
+req.session.user=user;
+//return res.status(200).send();
+res.json(user);
+})
+});
 
 
 //Partie login

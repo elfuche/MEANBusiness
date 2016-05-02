@@ -1,4 +1,5 @@
-<div>
+<div class="container">
+<div class="row">
 <h1>Bienvenue {{ok.username}}</h1>
 <div class="col-md-4">
 <fieldset>
@@ -30,17 +31,15 @@
         <input type="text" class="form-control" name="exp" ng-model="payForm.exp" required>
       </div>
 
-</div>
-</fieldset>
 
-<br>
-<h3>Montant à payer : {{tot}}</h3>
+</fieldset>
+</div>
 
 </div>
 
 <div class="row">
+  <h3>Montant à payer : {{tot}}</h3>
 <button type="submit" class="btn btn-default" ng-disabled="disabled">Payer</button>
 <button class="btn btn-warning">Annuler</button>
 </div>
 </div>
-<div>
