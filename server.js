@@ -80,6 +80,7 @@ app.get('/pcart', function (req, res) {
         var cart = req.session.cart,
             displayCart = {items: [], total: 0},
             total = 0;
+        req.session.shop = req.session.shop || [];    
         if (!cart) {
             //res.render('result', {result: 'Your cart is empty!'});
             //return;
@@ -111,27 +112,39 @@ app.delete('/cart/:id', function(req, res){
   console.log(id);
   
   var obj= req.session.shop;
-    //console.log(obj[2].ref);
-    //console.log(obj.length);
     var i=0;
     for(i=0;i<obj.length;i++){
       if(obj[i].ref === id){
+        obj[i].qty--;
+  //Recalcul du prix total
+  var amount = req.session.total = req.session.total-obj[i].price;        
         break;
       }
     }
-  //console.log(i);
-  //var arr=obj.splice(i,1);
-  //req.session.shop = arr;
-  //page=arr;
-  //console.log(page);
-  //req.session.shop = [];
-  //req.session.shop = obj.shift();
- //res.redirect('/pcart');
- //res.json('/pcart');
 
-req.session.shop.splice(1, 1);
-res.json(true);
+//suppression totale du panier après diminution    
+if(obj[i].qty<=0){obj.splice(i, 1);}
+
+
+req.session.shop = obj;
+
+req.session.cart={obj, amount};
+
+//res.json(req.session.shop);
+console.log("horreur modifiée");
+res.redirect('/postsuppr');
 });
+
+app.get('/postsuppr', function(req, res){
+res.json(req.session.shop);
+});
+
+app.get('/totalsuppr', function(req,res){
+  res.json(req.session.total);
+});
+
+
+
 
 //Partie login
 app.post('/login', function(req, res){

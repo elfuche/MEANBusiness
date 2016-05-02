@@ -74,7 +74,7 @@ $scope.voirPanier = function(){
 }]);
 
 myApp.controller('cartCtrl', ['$scope','$http','$location', function($scope,$http,$location){
-var refresh =function(){
+//var refresh =function(){
 $http.get('/pcart').success(function(response){
 	 //alert("voilà mon panier!!!!!");	 
 	 //$scope.panier=response;
@@ -83,16 +83,24 @@ $http.get('/pcart').success(function(response){
 $http.get('/total').success(function(response){
 	$scope.total=response;
 });	
-};
-refresh();
-
-//$scope.remove = function(id){
-//alert(id);
-//	$http.delete('/cart/' +id).success(function(response){
-//		alert("supprimé");
-//		refresh();
-//	});
 //};
+//refresh();
+
+$scope.remove = function(id){
+alert(id);
+	$http.delete('/cart/' +id).success(function(response){
+		alert("supprimé");
+		//refresh();
+	});
+	$http.get('/postsuppr').success(function(response){
+		$scope.panier=response;
+	});
+
+	$http.get('/totalsuppr').success(function(response){
+	$scope.total=response;
+});	
+};
+
 $scope.Valider = function(){
 	$location.path('/login');
 };
@@ -120,7 +128,7 @@ $http.get('/dashboard').success(function(response){
 //$scope.user=user;
 
 
-$http.get('/total').success(function(response){
+$http.get('/totalsuppr').success(function(response){
 	$scope.tot=response;
 });	
 }]);

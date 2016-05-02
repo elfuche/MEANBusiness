@@ -2,17 +2,17 @@
 <h1>Liste des commandes</h1>
 <table class="table">
 <thead>
-<th>Reference Article</th>
 <th>Nom</th>
 <th>Prix</th>
+<th>Quantité</th>
 <th>&nbsp</th>
 </thead>
 <tbody>
 <tr ng-repeat="p in panier">
 <td>{{p.name}}</td>
 <td>{{p.price}}</td>
-<td>{{p.qty}}</td>{{p.ref}}
-<td><button class="btn btn-danger" ng-click="remove(p.ref)">Remove</button></td>
+<td>{{p.qty}}</td>
+<td><button class="btn btn-danger" ng-click="remove(p.ref)">Réduire</button></td>
 </tr>
 </tbody>
 </table>
