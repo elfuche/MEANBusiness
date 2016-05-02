@@ -10,7 +10,9 @@ var dbp = mongojs('productlist',['panier']);
 var dbu = mongojs('productlist',['users']);
 var bodyParser = require('body-parser');
 var app = express();
-
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+var bcrypt = require('bcryptjs');
 
 app.use(express.static(__dirname+"/public"));
 
@@ -23,7 +25,11 @@ app.use(session({
      saveUninitialized: true
 }));
 
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
 
+//Les routes
 app.get('/productlist', function(req, res){
   console.log('I received a GET request');
   db.productlist.find(function(err, docs){
@@ -143,26 +149,56 @@ app.get('/totalsuppr', function(req,res){
   res.json(req.session.total);
 });
 
-//Partie login
-app.post('/login', function(req, res){
-var username=req.body.username;
-var password = req.body.password;
-console.log(username+"  "+password);
-dbu.users.findOne({username:username, password:password}, function(err, user){
-if(err){
-console.log(err);
-return res.status(500).send();
-}
-if(!user){
-return res.status(404).send();
-}
-console.log("trouvé");
-//register user in session
-req.session.user=user;
-//return res.status(200).send();
-res.json(user);
-})
+
+//partie passportJS 
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    dbu.users.findOne({username:username, password:password}, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false);
+        console.log('login raté');
+      }
+      //compare password
+       bcrypt.compare(password, hash, function(err, res) {
+        // res == true
+        if(err) { console.log('password error'); return done(null, false);}
+        console.log("password verified");
+       });
+      //fin comparaison
+      //if (!user.validPassword(password)) {
+        //return done(null, false, { message: 'Incorrect password.' });
+      //}
+      
+      return done(null, user);
+    });
+  }
+));
+
+
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
 });
+
+passport.deserializeUser(function(id, done) {
+  dbu.users.find({ _id: ObjectId(id) }, function(err,user) { 
+    done(err, user); 
+  });
+});
+app.post('/login',
+  passport.authenticate('local', {failureRedirect:'/login',failureFlash: true}),
+  function(req, res) {
+    console.log('ici login post');
+    req.session.username = req.body.username;
+    res.json(true);
+  });
+//fin passportJS
+
+
+
+//Partie login
 
 app.get('/dashboard', function(req,res){
   console.log('Dashboard ici!!');
@@ -175,6 +211,13 @@ return res.json(req.session.user);
 
 app.post('/register', function(req, res){
 console.log(req.body);
+//cryptage password
+bcrypt.genSalt(10, function(err, salt) {
+      bcrypt.hash(req.body.password, salt, function(err, hash) {
+          req.body.password = hash;
+      });
+  });
+//fin cryptage
   dbu.users.insert(req.body, function(err, doc){
     res.json(doc);
   });

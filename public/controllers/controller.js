@@ -114,6 +114,7 @@ $scope.Valider = function(){
 myApp.controller('loginCtrl',['$scope','$http','$location', function($scope,$http,$location){
 
 $scope.login = function(){
+	alert('login button');
 var data = {username:$scope.loginForm.username, password:$scope.loginForm.password};	
 $http.post('/login',data).success(function(response){
     $location.path('/dashboard');
@@ -137,11 +138,13 @@ $http.get('/totalsuppr').success(function(response){
 });	
 }]);
 
-myApp.controller('registerCtrl', ['$scope','$http', function($scope,$http){
+myApp.controller('registerCtrl', ['$scope','$http','$location', function($scope,$http,$location){
 	$scope.register = function(){
 	var data = {name: $scope.name, username: $scope.username, email:$scope.email, password: $scope.password};
 	$http.post('/register',data).success(function(response){
      console.log(response);
+     alert('Vous pouvez vous connecter maintenant');
+     $location.path('/login');
 	});
 };
 }]);
