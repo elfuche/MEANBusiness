@@ -117,7 +117,7 @@ app.delete('/cart/:id', function(req, res){
       if(obj[i].ref === id){
         obj[i].qty--;
   //Recalcul du prix total
-  var amount = req.session.total = req.session.total-obj[i].price;        
+  req.session.total = req.session.total-obj[i].price;        
         break;
       }
     }
@@ -128,7 +128,7 @@ if(obj[i].qty<=0){obj.splice(i, 1);}
 
 req.session.shop = obj;
 
-req.session.cart={obj, amount};
+//req.session.cart={obj, amount};
 
 //res.json(req.session.shop);
 console.log("horreur modifiée");
@@ -142,9 +142,6 @@ res.json(req.session.shop);
 app.get('/totalsuppr', function(req,res){
   res.json(req.session.total);
 });
-
-
-
 
 //Partie login
 app.post('/login', function(req, res){
@@ -176,6 +173,12 @@ console.log("ya rien ici mec!!")
 return res.json(req.session.user);
 });
 
+app.post('/register', function(req, res){
+console.log(req.body);
+  dbu.users.insert(req.body, function(err, doc){
+    res.json(doc);
+  });
+});
 app.listen(3000);
 
 console.log("Server Running on port 3000");

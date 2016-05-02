@@ -23,6 +23,10 @@ $routeProvider
 	templateUrl:'dashboard.html',
 	controller:'dashCtrl'
 })
+.when('/register',{
+	templateUrl:'register.html',
+	controller:'registerCtrl'
+})
 
 .otherwise({redirectTo:'/'})
 }]);
@@ -131,4 +135,13 @@ $http.get('/dashboard').success(function(response){
 $http.get('/totalsuppr').success(function(response){
 	$scope.tot=response;
 });	
+}]);
+
+myApp.controller('registerCtrl', ['$scope','$http', function($scope,$http){
+	$scope.register = function(){
+	var data = {name: $scope.name, username: $scope.username, email:$scope.email, password: $scope.password};
+	$http.post('/register',data).success(function(response){
+     console.log(response);
+	});
+};
 }]);
