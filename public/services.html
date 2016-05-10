@@ -1,0 +1,21 @@
+<h1>Réservations</h1>
+<div class="container" ng-controller="srvCtrl" id="service"> 
+<section class="sec-service">
+<div class="produit" ng-repeat="p in produit">
+
+<article class="art-service">
+  <header><h4>{{p.title}} <span>Reference : {{p._id}}</span></h4></header>
+<figure>
+
+<img ng-src="{{p.image}}" alt="{{produit.nom}}" />
+<figcaption style="font-weight:bold">{{p.description}}</figcaption>
+</figure>
+<p>Age minimum pour conduire: {{p.age_min}}</p>
+<p>Capacité : {{p.capacite}}</p>
+<footer class="footer-service" style="margin-bootom:15%">Prix: {{p.tarif_jour|currency}}</footer>
+<button ng-click="Commander(p._id)" class="btn btn-info">Réserver</button>
+</article>
+</div>
+
+</section>
+</div>

@@ -8,6 +8,11 @@ var dbcart=mongojs('productlist',['cartSession']);
 //collections panier
 var dbp = mongojs('productlist',['panier']);
 var dbu = mongojs('productlist',['users']);
+//Partie resevations
+var dbr = mongojs('productlist',['materiel']);
+var dbrs = mongojs('productlist',['reservations']);
+
+
 var bodyParser = require('body-parser');
 var app = express();
 var passport = require('passport')
@@ -256,6 +261,79 @@ bcrypt.genSalt(10, function(err, salt) {
     res.json(doc);
   });
 });
+
+
+
+//Partie Reservation
+//Les routes
+app.get('/reservelist', function(req, res){
+  console.log("reservelist");
+  dbr.materiel.find(function(err, docs){
+    console.log(docs);
+    res.json(docs);
+  });
+});
+
+app.get('/reservelist/:id', function(req,res){
+   var id = req.params.id;
+   console.log(id);
+   dbr.materiel.findOne({_id: mongojs.ObjectId(id)}, function(err,doc){
+     res.json(doc);
+   });
+
+});
+
+app.get('/datesDispo/:id', function(req,res){
+  var id = req.params.id;
+  console.log('Demande de dates disponibles pour : '+id);
+  //var dates = ["11-5-2016", "17-5-2016", "25-5-2016"];
+
+   dbr.materiel.findOne({_id: mongojs.ObjectId(id)}, function(err,doc){
+     console.log('dates depuis BD: '+doc.dates_non_comprises);
+     req.session.tarif=doc.tarif_jour;
+     res.json(doc.dates_non_comprises);
+   });
+  
+  //res.json(dates);
+});
+
+app.post('/updateProduit', function(req, res){
+  var id = req.body.idArticle;
+  console.log(id);
+  var a = req.body.dates;
+  console.log(a);
+  
+  //Ajouter proprement élément par élément
+  for(var i=0; i<a.length;i++){ 
+  dbr.materiel.update({ _id: mongojs.ObjectId(id) },{ $addToSet: {dates_non_comprises: a[i]}}, function(err,doc){
+    if(err){console.log('errrrrrrrr');}
+  });
+  } //fin boucle for
+  
+  //Remplir la table des reservations
+    dbrs.reservations.insert({idArticle:id,date_deb:a[0],date_fin:a[a.length-1],nb_jour:a.length, 
+      montant:(a.length)*(req.session.tarif)}, function(err, doc){
+      if(err){ console.log('erreur insertion');}
+    });
+  
+res.json(true);
+});
+
+//Partie Reservation Produit
+app.get('/reservation/:id', function(req,res){
+  console.log('reservation du produit');
+  var id = req.params.id;
+  //res.json(req.session.tarif);
+  dbrs.reservations.findOne({idArticle:id}, function(err,doc){
+     if(err){console.log("erreur reservation")}
+     res.json(doc);
+   });
+});
+
+
+
+
+
 app.listen(3000);
 
 console.log("Server Running on port 3000");

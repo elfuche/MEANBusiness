@@ -1,0 +1,30 @@
+<div style="width:50%; margin-right:20%;margin-left:20%;" ng-controller="rdetailCtrl">
+<h1>Description du produit</h1>
+<div>
+<figure>
+<img ng-src="{{produit.image}}" alt="{{produit.title}}" />
+<figcaption style="font-weight:bold;width:60%;">{{produit.description}}</figcaption>
+</figure>
+</div>
+<br>
+<span style="color:blueviolet; font-size:16px; font-weight:bold">Prix :{{produit.tarif_jour | currency}}</span> 
+<br>
+<br>
+<!--<button ng-click="ajoutPanier(produit._id,produit.title,produit.prix)" class="btn btn-primary">Valider et payer</button> -->
+<br>
+<br>
+<br>
+<br>
+<form ng-submit="louer()"> 
+<table>
+<tr>
+    <td><label>Date Départ</label></td>
+    <td><input type="text" id="datepicker"></td>
+    <td>&nbsp</td>
+    <td><label>Date Retour</label></td>
+    <td><input type="text" id="datepicker2"></td>
+</tr> 
+</table>
+<button class="btn btn-info">Valider</button>
+</form>
+</div>
