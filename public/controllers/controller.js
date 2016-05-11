@@ -290,9 +290,10 @@ function getDates(startDate, stopDate) {
 myApp.controller('resCtrl',['$scope','$http','$routeParams', function($scope, $http, $routeParams){
   var id = $routeParams.id;
   $scope.ok='test';
-$http.get('/reservation/'+id).success(function(response){
+$http.get('/reservation/'+id).success(function(response){  
   console.log("controlleur reservation");
- $scope.resa = response;
+ $scope.resa = response[0];
+
 });
 
 }]);

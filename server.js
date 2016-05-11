@@ -311,7 +311,7 @@ app.post('/updateProduit', function(req, res){
   } //fin boucle for
   
   //Remplir la table des reservations
-    dbrs.reservations.insert({idArticle:id,date_deb:a[0],date_fin:a[a.length-1],nb_jour:a.length, 
+    dbrs.reservations.insert({idArticle:id,date_deb:a[0],date_fin:a[a.length-1],nb_jour:a.length,date:new Date(),
       montant:(a.length)*(req.session.tarif)}, function(err, doc){
       if(err){ console.log('erreur insertion');}
     });
@@ -323,8 +323,8 @@ res.json(true);
 app.get('/reservation/:id', function(req,res){
   console.log('reservation du produit');
   var id = req.params.id;
-  //res.json(req.session.tarif);
-  dbrs.reservations.findOne({idArticle:id}, function(err,doc){
+ 
+  dbrs.reservations.find({idArticle:id}).limit(1).sort({date:-1}, function(err,doc){
      if(err){console.log("erreur reservation")}
      res.json(doc);
    });
