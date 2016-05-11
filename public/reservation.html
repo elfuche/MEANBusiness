@@ -22,18 +22,47 @@
 <div class="container">
 <div class="row">	
 <form class="col-md-4">
-<input type="text" class="form-control" placeholder="Nom" style="margin-bottom:5%">
-<input type="text" class="form-control" placeholder="Prenom" style="margin-bottom:5%">
-<input type="text" class="form-control" placeholder="CIN" style="margin-bottom:5%">
+<input type="text" class="form-control" placeholder="Nom" style="margin-bottom:5%" ng-model="nom">
+<input type="text" class="form-control" placeholder="Prenom" style="margin-bottom:5%" ng-model="prenom">
+<input type="text" class="form-control" placeholder="CIN" style="margin-bottom:5%" ng-model="CIN">
 <input type="text" class="form-control" placeholder="N° Carte de crédit" style="margin-bottom:5%">
-<button class="btn btn-warning" style="margin-bottom:12%">Payment</button>
+<button class="btn btn-warning" style="margin-bottom:12%"  data-toggle="modal" data-target="#myModal">Payment</button>
 </form>
 </div>
 <div class="row">
 	<div class="col-md-4">
 <div class="alert alert-info">
-  <strong>Info!</strong> Surtout ne pas oublier votre voucher quand vous passerez!
+  <strong>Info!</strong> Surtout n'oubliez pas votre voucher quand vous passerez, n'hésitez pas à l'imprimer!
 </div>
    </div>
 </div>
+</div>
+ <!-- Trigger the modal with a button -->
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Payment - Voucher</h4>
+      </div>
+      <div class="modal-body">
+        <p>Réservation n° {{resa._id}}</p>
+        Bénéficiaire : {{prenom}}  {{nom}}
+        <p>CIN : {{CIN}}</p>
+        <p>Objet : Location materiel</p>
+        <p>
+         <h3>Merci pour votre fidélité!</h3>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-success">Imprimer</button>
+      </div>
+    </div>
+
+  </div>
 </div>

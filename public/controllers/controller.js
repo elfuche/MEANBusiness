@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp',['ngRoute']);
+var myApp = angular.module('myApp',['ngRoute']); 
 
 myApp.config(['$routeProvider', function($routeProvider){
 
@@ -188,7 +188,7 @@ $http.get('/reservelist/' +id).success(function(response){
 		$scope.produit = response;
 	});
 
-
+//Traitement des dates disponibles pour la réservation du produit
 $http.get('/datesDispo/' +id).success(function(response){
 	var dates = response;
 
@@ -234,7 +234,7 @@ Date.prototype.addDays = function(days) {
     dat.setDate(dat.getDate() + days);
     return dat;
 };
-
+//Traitement pour calculer dates dans un intervalle
 function getDates(startDate, stopDate) {
     var dateArray = [];
     var currentDate = startDate;
@@ -295,6 +295,7 @@ $http.get('/reservation/'+id).success(function(response){
  $scope.resa = response[0];
 
 });
+
 
 }]);
 
